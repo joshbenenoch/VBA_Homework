@@ -1,0 +1,97 @@
+Sub StockData()
+
+Dim ws As Worksheet
+Dim Ticker As String
+Dim Vol As Double
+Dim YearOpen As Double
+Dim YearClose As Double
+Dim YearlyChange As Double
+Dim PercentChange As Double
+Dim SummaryTableRow As Integer
+Dim ColorRange As Range
+
+
+'run through each worksheet
+For Each ws In Worksheets
+
+  'set headers
+  ws.Cells(1, 9).Value = "Ticker"
+  ws.Cells(1, 10).Value = "Yearly Change"
+  ws.Cells(1, 11).Value = "Percent Change"
+  ws.Cells(1, 12).Value = "Total Stock Volume"
+
+
+  'setup integers for loop
+  SummaryTableRow = 2
+'loop
+RowCount = ws.Cells(Rows.Count, "A").End(xlUp).Row + 1
+      For I = 2 To RowCount
+           If ws.Cells(I + 1, 1).Value <> ws.Cells(I, 1).Value Then
+
+          'find all the values
+          Ticker = ws.Cells(I, 1).Value
+          Vol = ws.Cells(I, 7).Value
+
+          YearOpen = ws.Cells(I, 3).Value
+          YearClose = ws.Cells(I, 6).Value
+
+       If YearClose > 0 Then
+          YearlyChange = YearClose - YearOpen
+          PercentChange = (YearClose - YearOpen) * 100 / YearClose
+          End If
+
+
+          ' insert values into summary
+          ws.Cells(SummaryTableRow, 9).Value = Ticker
+          ws.Cells(SummaryTableRow, 10).Value = YearlyChange
+          ws.Cells(SummaryTableRow, 11).Value = PercentChange
+          ws.Cells(SummaryTableRow, 12).Value = Vol
+          SummaryTableRow = SummaryTableRow + 1
+
+           Vol = 0
+
+      End If
+
+'finish loop
+  Next I
+
+Next ws
+
+   'Conditional foramting to indicate positive and negative numbers
+
+'For Each ws In Worksheets
+
+Set ColorRange = Worksheets("2014").Range("J2:J2836")
+
+For Each Cell In ColorRange
+   If Cell.Value < 0 Then
+       Cell.Interior.ColorIndex = 3
+   Else
+       Cell.Interior.ColorIndex = 4
+    End If
+       
+Next
+
+Set ColorRange = Worksheets("2015").Range("J2:J3005")
+
+For Each Cell In ColorRange
+   If Cell.Value < 0 Then
+       Cell.Interior.ColorIndex = 3
+   Else
+       Cell.Interior.ColorIndex = 4
+    End If
+       
+Next
+
+Set ColorRange = Worksheets("2016").Range("J2:J3169")
+
+For Each Cell In ColorRange
+   If Cell.Value < 0 Then
+       Cell.Interior.ColorIndex = 3
+   Else
+       Cell.Interior.ColorIndex = 4
+End If
+
+Next
+
+  End Sub
